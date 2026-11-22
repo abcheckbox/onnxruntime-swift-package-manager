@@ -42,3 +42,15 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+---
+
+## Fork notes (abcheckbox)
+
+This fork of masicai/onnxruntime-swift-package-manager @ 1.28.0 removes the unused
+`onnxruntime_extensions` product/target. Its binary target downloads from
+`download.onnxruntime.ai`, which since November 2026 serves a TLS certificate that
+does not match the hostname, breaking every fresh SwiftPM resolution (CI and local)
+for consumers such as flutter_onnxruntime. The extension product is not used by
+flutter_onnxruntime; see https://github.com/abcheckbox/edge-rag . Until Microsoft fixes
+the host (or masicai moves the artifact), keep this fork pinned via Package.resolved.

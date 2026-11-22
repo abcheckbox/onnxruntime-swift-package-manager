@@ -25,9 +25,6 @@ let package = Package(
         .library(name: "onnxruntime",
                  type: .static,
                  targets: ["OnnxRuntimeBindings"]),
-        .library(name: "onnxruntime_extensions",
-                 type: .static,
-                 targets: ["OnnxRuntimeExtensions"]),
     ],
     dependencies: [],
     targets: [
@@ -51,18 +48,7 @@ let package = Package(
                     resources: [
                         .copy("Resources/single_add.basic.ort")
                     ]),
-        .target(name: "OnnxRuntimeExtensions",
-                dependencies: ["onnxruntime_extensions", "onnxruntime"],
-                path: "extensions",
-                cxxSettings: [
-                    .define("ORT_SWIFT_PACKAGE_MANAGER_BUILD"),
                 ]),
-        .testTarget(name: "OnnxRuntimeExtensionsTests",
-                    dependencies: ["OnnxRuntimeExtensions", "OnnxRuntimeBindings"],
-                    path: "swift/OnnxRuntimeExtensionsTests",
-                    resources: [
-                        .copy("Resources/decode_image.onnx")
-                    ]),
     ],
     cxxLanguageStandard: .cxx17
 )
@@ -117,22 +103,5 @@ if let pod_archive_path = ProcessInfo.processInfo.environment["ORT_POD_LOCAL_PAT
                            // SwiftPM (SHA256) checksum of the release asset; recompute with
                            // `swift package compute-checksum <zip>` if the asset is regenerated.
                            checksum: "7e031979787f2da0f3ff45d18431db93c4443033020b210413b287a855870c3c")
-    )
-}
-
-if let ext_pod_archive_path = ProcessInfo.processInfo.environment["ORT_EXTENSIONS_POD_LOCAL_PATH"] {
-    package.targets.append(Target.binaryTarget(name: "onnxruntime_extensions", path: ext_pod_archive_path))
-} else {
-    // ORT Extensions release
-    //
-    // NOTE: still Microsoft's framework-format pod archive, so the App Store
-    // embedding issue described above applies to apps that consume the
-    // "onnxruntime_extensions" product. Repackage it the same way if needed
-    // (flutter_onnxruntime does not use it).
-    package.targets.append(
-        Target.binaryTarget(name: "onnxruntime_extensions",
-                            url: "https://download.onnxruntime.ai/pod-archive-onnxruntime-extensions-c-0.13.0.zip",
-                            // SHA256 checksum
-                            checksum: "346522d1171d4c99cb0908fa8e4e9330a4a6aad39cd83ce36eb654437b33e6b5")
     )
 }
