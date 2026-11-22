@@ -48,7 +48,7 @@ let package = Package(
                     resources: [
                         .copy("Resources/single_add.basic.ort")
                     ]),
-                ]),
+
     ],
     cxxLanguageStandard: .cxx17
 )
